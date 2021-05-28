@@ -1,17 +1,39 @@
 import numpy as np
+from plot import *
 
 ##################################################################################################################
-#for testing purposes, locArr represents the cost of each location
-locArr = np.array([[1, 2],
-				   [3, 4]])
+#generate char_map of locations
 
-print("array of location costs:")
-print(locArr, "\n")
+# Number of rows and columns TODO: Change to USER INPUT
+row_num = 5
+col_num = 6
+
+char_map = []
+# Create Randomized Map
+for i in range(row_num):
+    row = []
+    for j in range(col_num):
+        rd = random.randint(1, 4)
+        if rd == 1:
+            row.append("p")
+        elif rd == 2:
+            row.append("q")
+        elif rd == 3:
+            row.append("v")
+        else:
+            row.append("n")
+    char_map.append(row)
+
+print(char_map)
+
+#display map to screen
+displayMap(char_map, row_num, col_num)
+
 ##################################################################################################################
-#from the size of locArr, generate an array of points pointArr that will be used for path finding
-locArr_row, locArr_col = locArr.shape
-pointArr_row = locArr_row +1
-pointArr_col = locArr_col +1
+#generate an array of points pointArr for path finding
+#locArr_row, locArr_col = locArr.shape
+pointArr_row = row_num +1
+pointArr_col = col_num +1
 
 nbPoints = pointArr_row * pointArr_col
 pointList = []
@@ -127,7 +149,7 @@ def peekDown(origin):
 #end when we find our destination
 
 visitedPoints = {} #dictionary containing all the points that have been visited already
-dist = {} #dictionary containing all the remaining points and their distances (initially infinity??)
+dist = {} #dictionary containing all the explored  points and their distances (initially infinity??)
 
 
 #visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{}
