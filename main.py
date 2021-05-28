@@ -26,8 +26,9 @@ print("array of points:")
 print(pointArr)
 
 ##################################################################################################################
-#functions
+#PEEKING FUNCTIONS
 #checks if the index is in bounds of an array
+#takes an array and a point (i,j)
 def isInBounds(arr, index):
 	row, col = arr.shape
 	if index[0] >= 0 and index[0] < row and index[1] >= 0 and index[1] < col:
@@ -38,6 +39,7 @@ def isInBounds(arr, index):
 
 #peeks right and returns the cost of moving right
 #moving right along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
+#takes a point (i,j)
 def peekRight(origin):
 	dest = (origin[0], origin[1]+1)
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
@@ -54,10 +56,10 @@ def peekRight(origin):
 	else:
 		pass
 
-#print(peekRight((2,0)))
 
 #peeks left and returns the cost of moving left
 #moving left along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
+#takes a point (i,j)
 def peekLeft(origin):
 	dest = (origin[0], origin[1]-1)
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
@@ -74,10 +76,10 @@ def peekLeft(origin):
 	else:
 		pass
 
-#print(peekLeft((1,1)))
 
 #peeks up and returns the cost of moving up
 #moving up along an edge requires us to fetch the locations at the left and at the right of the edge and returning the average
+#takes a point (i,j)
 def peekUp(origin):
 	dest = (origin[0]-1, origin[1])
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
@@ -94,10 +96,10 @@ def peekUp(origin):
 	else:
 		pass
 
-#print(peekUp((1,1)))
 
 #peeks down and returns the cost of moving down
 #moving down along an edge requires us to fetch the locations at the left and at the right of the edge and returning the average
+#takes a point (i,j)
 def peekDown(origin):
 	dest = (origin[0]+1, origin[1])
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
@@ -114,50 +116,62 @@ def peekDown(origin):
 	else:
 		pass
 
-# if (peekDown((10,1)) is None):
-# 	print('hue')
 
+##################################################################################################################
+#DIJKSTRA ALGORITHM????
+#start at beginning and put the first point in the visited list
+#explore all neighbour points
+#update the total distance of the points explored if the total distance is smaller than their current value
+#visit the point with the lowest distance
+#repeat
+#end when we find our destination
 
-#dijsktra's algorithm
 visitedPoints = {} #dictionary containing all the points that have been visited already
-dist = {} #dictionary containing all the remaining points and their distances (initially infinity)
+dist = {} #dictionary containing all the remaining points and their distances (initially infinity??)
 
 
-#adds the point with the lowest distance from dist[] to visitedPoints[] list
+#visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{}
 def visitMinDist():
 	pass
 
 
-#explores adjacent points and updates their distance value
+#explores neighbour points and updates their distance value in dist{}
 def exploreNeighbours(origin):
 	point_right = (origin[0], origin[1]+1)
 	cost_right = peekRight(origin)
 	if (cost_right is not None and point_right not in visitedPoints): #make sure the cost of going right isn't None and the point has not already been visited
-		updateDistance(point_right, cost_right)
+		total_cost_right = visitedPoints[origin] + cost_right  #the distance is cumulative
+		updateDistance(point_right, total_cost_right)
 
 	point_left = (origin[0], origin[1]-1)
 	cost_left = peekLeft(origin)
 	if (cost_left is not None and point_left not in visitedPoints):
-		updateDistance(point_left, cost_left)
+		total_cost_left = visitedPoints[origin] + cost_left
+		updateDistance(point_left, total_cost_left)
 
 	point_up = (origin[0]-1, origin[1])
 	cost_up = peekUp(origin)
 	if (cost_up is not None and point_up not in visitedPoints):
-		updateDistance(point_up, cost_up)
+		total_cost_up = visitedPoints[origin] + cost_up
+		updateDistance(point_up, total_cost_up)
 
 	point_down = (origin[0]+1, origin[1])
 	cost_down = peekDown(origin)
 	if (cost_down is not None and point_down not in visitedPoints):
-		updateDistance(point_down, cost_down)
+		total_cost_down = visitedPoints[origin] + cost_down
+		updateDistance(point_down, total_cost_down)
 
 
-#updates distance value if it is lower than the current one
+#updates distance value in dist{} if it is lower than the current one
 def updateDistance(point, newValue):
-	pass
+	if point in dist : #if the point is already explored then we just compare the value
+		if newValue > dist[point]:
+			dist[point] = newValue
+	else: #otherwise the point was not previously explored so we add it to dist{}
+		dist[point] = newValue
 
 
-
-#testing
+#testing dictionaries
 # test = {(1, 2): 10, (3, 0): 100}
 # print(test)
 # if (1, 2) in test:
@@ -167,4 +181,8 @@ def updateDistance(point, newValue):
 # print(test)
 # #updating value
 # test[(0,1)] = 60
-# print(test)
+# print(test[(0,1)])
+
+
+##################################################################################################################
+#HEURISTIC FUNCTIONS
