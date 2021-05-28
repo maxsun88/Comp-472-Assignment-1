@@ -27,13 +27,14 @@ print(pointArr)
 
 ##################################################################################################################
 #functions
-#checks if the index is in bounds
+#checks if the index is in bounds of an array
 def isInBounds(arr, index):
 	row, col = arr.shape
 	if index[0] >= 0 and index[0] < row and index[1] >= 0 and index[1] < col:
 		return True
 	else:
 		return False
+
 
 #peeks right and returns the cost of moving right
 #moving right along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
@@ -113,4 +114,57 @@ def peekDown(origin):
 	else:
 		pass
 
-#print(peekDown((0,1)))
+# if (peekDown((10,1)) is None):
+# 	print('hue')
+
+
+#dijsktra's algorithm
+visitedPoints = {} #dictionary containing all the points that have been visited already
+dist = {} #dictionary containing all the remaining points and their distances (initially infinity)
+
+
+#adds the point with the lowest distance from dist[] to visitedPoints[] list
+def visitMinDist():
+	pass
+
+
+#explores adjacent points and updates their distance value
+def exploreNeighbours(origin):
+	point_right = (origin[0], origin[1]+1)
+	cost_right = peekRight(origin)
+	if (cost_right is not None and point_right not in visitedPoints): #make sure the cost of going right isn't None and the point has not already been visited
+		updateDistance(point_right, cost_right)
+
+	point_left = (origin[0], origin[1]-1)
+	cost_left = peekLeft(origin)
+	if (cost_left is not None and point_left not in visitedPoints):
+		updateDistance(point_left, cost_left)
+
+	point_up = (origin[0]-1, origin[1])
+	cost_up = peekUp(origin)
+	if (cost_up is not None and point_up not in visitedPoints):
+		updateDistance(point_up, cost_up)
+
+	point_down = (origin[0]+1, origin[1])
+	cost_down = peekDown(origin)
+	if (cost_down is not None and point_down not in visitedPoints):
+		updateDistance(point_down, cost_down)
+
+
+#updates distance value if it is lower than the current one
+def updateDistance(point, newValue):
+	pass
+
+
+
+#testing
+# test = {(1, 2): 10, (3, 0): 100}
+# print(test)
+# if (1, 2) in test:
+# 	print('heck yeah')
+# #adding new point and value
+# test[(0,1)] = 400
+# print(test)
+# #updating value
+# test[(0,1)] = 60
+# print(test)
