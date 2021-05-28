@@ -55,7 +55,7 @@ plt.subplots_adjust(left=0.1, right=0.8, top=0.9, bottom=0.1)
 im = plt.imshow(color_map, extent=[0, col_num * width, 0, row_num * height], cmap=cm.tab20c, aspect='auto',
                 interpolation='none')
 
-# get the colors of the values, according to the
+# Draw legends
 # colormap used by imshow
 colors = [im.cmap(im.norm(value[1])) for value in color_vals]
 # create a patch (proxy artist) for every color
