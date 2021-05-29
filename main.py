@@ -27,7 +27,7 @@ for i in range(row_num):
 print(char_map)
 
 #display map to screen
-displayMap(char_map, row_num, col_num)
+#displayMap(char_map, row_num, col_num)
 
 ##################################################################################################################
 #generate an array of points pointArr for path finding
@@ -148,13 +148,17 @@ def peekDown(origin):
 #repeat
 #end when we find our destination
 
-visitedPoints = {} #dictionary containing all the points that have been visited already
-dist = {} #dictionary containing all the explored  points and their distances (initially infinity??)
+visitedPoints = {} #dictionary containing all the points that have been visited already  {(i, j): (cost, (i_parent, j_parent))}
+dist = {} #dictionary containing all the explored  points and their distances (initially infinity??)  {(i, j): (cost, (i_parent, j_parent))}
 
 
-#visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{}
+#visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
 def visitMinDist():
-	pass
+	smallestEntryKey = min(dist, key = dist.get)
+	visitedPoints[smallestEntryKey] = dist[smallestEntryKey] #creates a new entry identical to the smallest entry in dist
+	del dist[smallestEntryKey] #remove it from dist
+	return smallestEntryKey
+	
 
 
 #explores neighbour points and updates their distance value in dist{}
@@ -162,48 +166,61 @@ def exploreNeighbours(origin):
 	point_right = (origin[0], origin[1]+1)
 	cost_right = peekRight(origin)
 	if (cost_right is not None and point_right not in visitedPoints): #make sure the cost of going right isn't None and the point has not already been visited
-		total_cost_right = visitedPoints[origin] + cost_right  #the distance is cumulative
-		updateDistance(point_right, total_cost_right)
+		total_cost_right = visitedPoints[origin][0] + cost_right  #the distance is cumulative
+		updateDistance(point_right, origin, total_cost_right)
 
 	point_left = (origin[0], origin[1]-1)
 	cost_left = peekLeft(origin)
 	if (cost_left is not None and point_left not in visitedPoints):
-		total_cost_left = visitedPoints[origin] + cost_left
-		updateDistance(point_left, total_cost_left)
+		total_cost_left = visitedPoints[origin][0] + cost_left
+		updateDistance(point_left, origin, total_cost_left)
 
 	point_up = (origin[0]-1, origin[1])
 	cost_up = peekUp(origin)
 	if (cost_up is not None and point_up not in visitedPoints):
-		total_cost_up = visitedPoints[origin] + cost_up
-		updateDistance(point_up, total_cost_up)
+		total_cost_up = visitedPoints[origin][0] + cost_up
+		updateDistance(point_up, origin, total_cost_up)
 
 	point_down = (origin[0]+1, origin[1])
 	cost_down = peekDown(origin)
 	if (cost_down is not None and point_down not in visitedPoints):
-		total_cost_down = visitedPoints[origin] + cost_down
-		updateDistance(point_down, total_cost_down)
+		total_cost_down = visitedPoints[origin][0] + cost_down
+		updateDistance(point_down, origin, total_cost_down)
 
 
-#updates distance value in dist{} if it is lower than the current one
-def updateDistance(point, newValue):
+#updates distance and parent value in dist{} if it is lower than the current one
+def updateDistance(point, parent, newValue):
 	if point in dist : #if the point is already explored then we just compare the value
-		if newValue > dist[point]:
-			dist[point] = newValue
+		if newValue > dist[point][0]:
+			dist[point][0] = newValue
+			dist[point][1] = parent
 	else: #otherwise the point was not previously explored so we add it to dist{}
-		dist[point] = newValue
+		dist[point] = newValue, parent
 
+#checks if algorithm is finished
+#finished if our goal point has been explored
+def isFinished():
+	pass
 
 #testing dictionaries
-# test = {(1, 2): 10, (3, 0): 100}
+# test = {(1, 2): (200, (0,0)), (3, 0): (100, (100,0))}
+# test2 = {}
 # print(test)
+#move minimum value from test to test2
+# smallestEntryKey = min(test, key = test.get)
+# test2[smallestEntryKey] = test[smallestEntryKey] #creates a new entry identical to the smallest entry in dist
+# del test[smallestEntryKey] #remove it from dist
+# print(test)
+# print(test2)
+#prints the cost
+#print(test[1, 2][0])
+#prints the parent point
+#print(test[1,2][1])
 # if (1, 2) in test:
 # 	print('heck yeah')
-# #adding new point and value
-# test[(0,1)] = 400
-# print(test)
-# #updating value
-# test[(0,1)] = 60
-# print(test[(0,1)])
+#adding new point and value
+#test[(0,1)] = 400, (0,0)
+#print(test)
 
 
 ##################################################################################################################
