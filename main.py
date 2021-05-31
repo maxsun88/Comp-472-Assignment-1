@@ -24,7 +24,7 @@ for i in range(row_num):
             row.append("n")
     char_map.append(row)
 
-print(char_map)
+#print(char_map)
 
 #display map to screen
 #displayMap(char_map, row_num, col_num)
@@ -44,8 +44,8 @@ for i in range(nbPoints):
 tempPointArr = np.asarray(pointList)
 pointArr = np.reshape(tempPointArr, (pointArr_row, pointArr_col))
 
-print("array of points:")
-print(pointArr)
+#print("array of points:")
+#print(pointArr)
 
 ##################################################################################################################
 #PEEKING FUNCTIONS
@@ -150,6 +150,8 @@ def peekDown(origin):
 
 visitedPoints = {} #dictionary containing all the points that have been visited already  {(i, j): (cost, (i_parent, j_parent))}
 dist = {} #dictionary containing all the explored  points and their distances (initially infinity??)  {(i, j): (cost, (i_parent, j_parent))}
+start = () #start point TODO:user input
+end = () #end point TODO:user input
 
 
 #visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
@@ -158,8 +160,6 @@ def visitMinDist():
 	visitedPoints[smallestEntryKey] = dist[smallestEntryKey] #creates a new entry identical to the smallest entry in dist
 	del dist[smallestEntryKey] #remove it from dist
 	return smallestEntryKey
-	
-
 
 #explores neighbour points and updates their distance value in dist{}
 def exploreNeighbours(origin):
@@ -187,22 +187,39 @@ def exploreNeighbours(origin):
 		total_cost_down = visitedPoints[origin][0] + cost_down
 		updateDistance(point_down, origin, total_cost_down)
 
-
 #updates distance and parent value in dist{} if it is lower than the current one
 def updateDistance(point, parent, newValue):
-	if point in dist : #if the point is already explored then we just compare the value
-		if newValue > dist[point][0]:
+	if point in dist :
+		if newValue < dist[point][0]:
 			dist[point][0] = newValue
 			dist[point][1] = parent
-	else: #otherwise the point was not previously explored so we add it to dist{}
-		dist[point] = newValue, parent
 
 #checks if algorithm is finished
-#finished if our goal point has been explored
+#finished if our end point has been explored (its distance is no longer infinity)
 def isFinished():
-	pass
+	if dist[end][0] is not float("inf"):
+		return True
+	else:
+		return False
 
-#testing dictionaries
+#runs the algorithm
+def run(start, end):
+	for i in range(pointArr_row):
+ 		for j in range(pointArr_col):
+ 			dist[(i,j)] = (float("inf"), ())
+ 	dist[start][0] = 0  #the cost of our starting point is set to 0 so that it is picked first
+
+ 	while isFinished is False:
+ 		minDist = visitMinDist() #visit point with minimum distance in dist{}
+ 		exploreNeighbours(minDist) #we explore all its neighbours and update their distance values
+
+ 	#now we have found the end point
+ 	#TODO: write function that stores/displays the path taken and the total cost
+
+
+
+
+#TESTING STUFF
 # test = {(1, 2): (200, (0,0)), (3, 0): (100, (100,0))}
 # test2 = {}
 # print(test)
@@ -221,6 +238,14 @@ def isFinished():
 #adding new point and value
 #test[(0,1)] = 400, (0,0)
 #print(test)
+
+# testing = {}
+
+# for i in range(pointArr_row):
+# 	for j in range(pointArr_col):
+# 		testing[(i,j)] = (float("inf"), ())
+
+# print(testing)
 
 
 ##################################################################################################################
