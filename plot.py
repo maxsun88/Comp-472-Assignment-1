@@ -8,23 +8,23 @@ import matplotlib.cm as cm
 def displayMap(char_map, row_num, col_num):
     # Color Values
     color_vals = [
-    ["quarantine", 1],
-    ["playground", 2],
-    ["vaccine", 3],
-    ["neutral", 4]
+        ["quarantine", 1],
+        ["playground", 2],
+        ["vaccine", 3],
+        ["neutral", 4]
     ]
-  
+
     width = 0.2  # cell width
     height = 0.1  # cell height
-    
+
     # Create color map for UI purpose only
     color_map = []
     for i in range(row_num):
         row = []
         for j in range(col_num):
-            if char_map[i][j] == "p":
+            if char_map[i][j] == "q":
                 row.append(color_vals[0][1])
-            elif char_map[i][j] == "q":
+            elif char_map[i][j] == "p":
                 row.append(color_vals[1][1])
             elif char_map[i][j] == "v":
                 row.append(color_vals[2][1])
@@ -48,8 +48,8 @@ def displayMap(char_map, row_num, col_num):
 
     # create indexes shown on plot
     index_markers = []
-    for i in range(row_num+1):
-        for j in range(col_num+1):
+    for i in range(row_num + 1):
+        for j in range(col_num + 1):
             text = "{i},{j}".format(i=i, j=j)
             x_coord = j * width  # x coordinate
             y_coord = (row_num - i) * height  # y coordinate

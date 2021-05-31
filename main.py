@@ -2,12 +2,15 @@ import numpy as np
 from plot import *
 
 ##################################################################################################################
-# generate char_map of locations
+
+# Global Variable of player
+PLAYER = "C"
 
 # Number of rows and columns TODO: Change to USER INPUT
 row_num = 5
 col_num = 6
 
+# generate char_map of locations
 char_map = []
 # Create Randomized Map
 for i in range(row_num):
@@ -26,8 +29,7 @@ for i in range(row_num):
 
 print(char_map)
 
-# display map to screen
-displayMap(char_map, row_num, col_num)
+
 
 ##################################################################################################################
 # generate an array of points pointArr for path finding
@@ -53,6 +55,7 @@ pointArr = np.reshape(tempPointArr, (pointArr_row, pointArr_col))
 # checks if the index is in bounds of an array
 # takes an array and a point (i,j)
 def isInBounds(arr, index):
+    arr = np.asarray(arr)
     row, col = arr.shape
     if index[0] >= 0 and index[0] < row and index[1] >= 0 and index[1] < col:
         return True
@@ -61,8 +64,24 @@ def isInBounds(arr, index):
 
 
 # TODO: write function that converts a letter in char_map into a value depending on the type of player
-def getLocationCost(player):
-    pass
+def getLocationCost(tuple):
+    i, j = tuple
+    c_dic = {  # costs for role C - patient
+        "p": 3,
+        "q": 0,
+        "v": 2,
+        "n": 1
+    }
+    v_dic = {  # costs for role V - vaccine receiver
+        "p": 1,
+        "q": 3,
+        "v": 0,
+        "n": 2
+    }
+    if PLAYER == 'C':  # Covid patient
+        return c_dic[char_map[i][j]]
+    elif PLAYER == 'V':
+        return v_dic[char_map[i][j]]
 
 
 # peeks right and returns the cost of moving right
@@ -113,14 +132,18 @@ def peekUp(origin):
     if (isInBounds(pointArr, dest)):  # make sure the place we want to go exists first
         left = (dest[0], dest[1] - 1)
         right = (dest[0], dest[1])
+        print(left)
+        print(getLocationCost(left))
+        print(right)
+        print(getLocationCost(right))
         if not isInBounds(char_map, left):
             # DEBUG: print('returning right')
-            return char_map[right]
+            return getLocationCost(right)
         if not isInBounds(char_map, right):
             # DEBUG: print('returning left')
-            return char_map[left]
+            return getLocationCost(left)
         # DEBUG: print('returning average')
-        return (char_map[left] + char_map[right]) / 2
+        return (getLocationCost(left) + getLocationCost(right)) / 2
     else:
         pass
 
@@ -258,6 +281,10 @@ def run(start, end):
 
 # print(testing)
 
+print(peekUp((1, 1)))
+
+# display map to screen
+displayMap(char_map, row_num, col_num)
 
 ##################################################################################################################
 # HEURISTIC FUNCTIONS
