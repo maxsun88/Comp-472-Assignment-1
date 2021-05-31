@@ -24,7 +24,7 @@ for i in range(row_num):
             row.append("n")
     char_map.append(row)
 
-#print(char_map)
+print(char_map)
 
 #display map to screen
 #displayMap(char_map, row_num, col_num)
@@ -58,6 +58,10 @@ def isInBounds(arr, index):
 	else:
 		return False
 
+#TODO: write function that converts a letter in char_map into a value depending on the type of player
+def getLocationCost(player):
+	pass
+
 
 #peeks right and returns the cost of moving right
 #moving right along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
@@ -67,14 +71,14 @@ def peekRight(origin):
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
 		top = (origin[0]-1, origin[1])
 		bot = (origin[0], origin[1])
-		if not isInBounds(locArr, top):
+		if not isInBounds(char_map, top):
 			#DEBUG: print('returning bot')
-			return locArr[bot]
-		if not isInBounds(locArr, bot):
+			return char_map[bot]
+		if not isInBounds(char_map, bot):
 			#DEBUG: print('returning top')
-			return locArr[top]
+			return char_map[top]
 		#DEBUG: print('returning average')
-		return (locArr[top] + locArr[bot]) /2
+		return (char_map[top] + char_map[bot]) /2
 	else:
 		pass
 
@@ -87,14 +91,14 @@ def peekLeft(origin):
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
 		top = (dest[0]-1, dest[1])
 		bot = (dest[0], dest[1])
-		if not isInBounds(locArr, top):
+		if not isInBounds(char_map, top):
 			#DEBUG: print('returning bot')
-			return locArr[bot]
-		if not isInBounds(locArr, bot):
+			return char_map[bot]
+		if not isInBounds(char_map, bot):
 			#DEBUG: print('returning top')
-			return locArr[top]
+			return char_map[top]
 		#DEBUG: print('returning average')
-		return (locArr[top] + locArr[bot]) /2
+		return (char_map[top] + char_map[bot]) /2
 	else:
 		pass
 
@@ -107,14 +111,14 @@ def peekUp(origin):
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
 		left = (dest[0], dest[1]-1)
 		right = (dest[0], dest[1])
-		if not isInBounds(locArr, left):
+		if not isInBounds(char_map, left):
 			#DEBUG: print('returning right')
-			return locArr[right]
-		if not isInBounds(locArr, right):
+			return char_map[right]
+		if not isInBounds(char_map, right):
 			#DEBUG: print('returning left')
-			return locArr[left]
+			return char_map[left]
 		#DEBUG: print('returning average')
-		return (locArr[left] + locArr[right]) /2
+		return (char_map[left] + char_map[right]) /2
 	else:
 		pass
 
@@ -127,14 +131,14 @@ def peekDown(origin):
 	if(isInBounds(pointArr, dest)): #make sure the place we want to go exists first
 		left = (origin[0], origin[1]-1)
 		right = (origin[0], origin[1])
-		if not isInBounds(locArr, left):
+		if not isInBounds(char_map, left):
 			#DEBUG: print('returning right')
-			return locArr[right]
-		if not isInBounds(locArr, right):
+			return char_map[right]
+		if not isInBounds(char_map, right):
 			#DEBUG: print('returning left')
-			return locArr[left]
+			return char_map[left]
 		#DEBUG: print('returning average')
-		return (locArr[left] + locArr[right]) /2
+		return (char_map[left] + char_map[right]) /2
 	else:
 		pass
 
@@ -207,9 +211,10 @@ def run(start, end):
 	for i in range(pointArr_row):
  		for j in range(pointArr_col):
  			dist[(i,j)] = (float("inf"), ())
- 	dist[start][0] = 0  #the cost of our starting point is set to 0 so that it is picked first
-
- 	while isFinished is False:
+ 	
+	dist[start][0] = 0  #the cost of our starting point is set to 0 so that it is picked first
+ 	
+	while isFinished is False:
  		minDist = visitMinDist() #visit point with minimum distance in dist{}
  		exploreNeighbours(minDist) #we explore all its neighbours and update their distance values
 
