@@ -1,6 +1,5 @@
 import numpy as np
 from plot import *
-from helper import *
 ##################################################################################################################
 
 # Global Variable of player
@@ -236,12 +235,11 @@ def run(start, end):
     for i in range(pointArr_row):
         for j in range(pointArr_col):
             dist[(i, j)] = (float("inf"), ())
-
-    dist[start][0] = 0  # the cost of our starting point is set to 0 so that it is picked first
-
+    dist[start] = (0, ())  # the cost of our starting point is set to 0 so that it is picked first
     while isFinished is False:
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
+    print(dist)
 
 # now we have found the end point
 # TODO: write function that stores/displays the path taken and the total cost
@@ -275,7 +273,7 @@ def run(start, end):
 
 # print(testing)
 
-print(peekUp((1, 1)))
+run((0,0),(1,1))
 
 # display map to screen
 displayMap(char_map, row_num, col_num)
