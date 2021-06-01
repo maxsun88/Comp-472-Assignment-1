@@ -62,16 +62,16 @@ def displayMap(char_map, row_num, col_num):
     plt.grid(color='white', linestyle='-.', linewidth=3)
 
     # Draw the Paths TODO: Provide a function
-    x2, y2 = [0.0, 0.2], \
-             [0.3, 0.3]
-    plt.plot(x2, y2, 'r', marker='o', linewidth=4)
-
-    x2, y2 = [0.2, 0.2], \
-             [0.3, 0.2]
-    plt.plot(x2, y2, 'r', marker='o', linewidth=4)
-
-    x2, y2 = [0.2, 0.4], \
-             [0.2, 0.2]
-    plt.plot(x2, y2, 'r', marker='o', linewidth=4)
+    # x2, y2 = [0.0, 0.2], \
+    #          [0.3, 0.3]
+    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
+    #
+    # x2, y2 = [0.2, 0.2], \
+    #          [0.3, 0.2]
+    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
+    #
+    # x2, y2 = [0.2, 0.4], \
+    #          [0.2, 0.2]
+    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
 
     plt.show()

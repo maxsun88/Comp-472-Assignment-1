@@ -1,14 +1,14 @@
 import numpy as np
 from plot import *
-
+from helper import *
 ##################################################################################################################
 
 # Global Variable of player
 PLAYER = "C"
 
 # Number of rows and columns TODO: Change to USER INPUT
-row_num = 5
-col_num = 6
+row_num = 2
+col_num = 2
 
 # generate char_map of locations
 char_map = []
@@ -62,8 +62,7 @@ def isInBounds(arr, index):
     else:
         return False
 
-
-# TODO: write function that converts a letter in char_map into a value depending on the type of player
+# get costs correlating each kind of areas
 def getLocationCost(tuple):
     i, j = tuple
     c_dic = {  # costs for role C - patient
@@ -83,7 +82,6 @@ def getLocationCost(tuple):
     elif PLAYER == 'V':
         return v_dic[char_map[i][j]]
 
-
 # peeks right and returns the cost of moving right
 # moving right along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
 # takes a point (i,j)
@@ -94,12 +92,12 @@ def peekRight(origin):
         bot = (origin[0], origin[1])
         if not isInBounds(char_map, top):
             # DEBUG: print('returning bot')
-            return char_map[bot]
+            return getLocationCost(bot)
         if not isInBounds(char_map, bot):
             # DEBUG: print('returning top')
-            return char_map[top]
+            return getLocationCost(top)
         # DEBUG: print('returning average')
-        return (char_map[top] + char_map[bot]) / 2
+        return (getLocationCost(top) + getLocationCost(bot)) / 2
     else:
         pass
 
@@ -114,12 +112,12 @@ def peekLeft(origin):
         bot = (dest[0], dest[1])
         if not isInBounds(char_map, top):
             # DEBUG: print('returning bot')
-            return char_map[bot]
+            return getLocationCost(bot)
         if not isInBounds(char_map, bot):
             # DEBUG: print('returning top')
-            return char_map[top]
+            return getLocationCost(top)
         # DEBUG: print('returning average')
-        return (char_map[top] + char_map[bot]) / 2
+        return (getLocationCost(top) + getLocationCost(bot)) / 2
     else:
         pass
 
@@ -132,10 +130,6 @@ def peekUp(origin):
     if (isInBounds(pointArr, dest)):  # make sure the place we want to go exists first
         left = (dest[0], dest[1] - 1)
         right = (dest[0], dest[1])
-        print(left)
-        print(getLocationCost(left))
-        print(right)
-        print(getLocationCost(right))
         if not isInBounds(char_map, left):
             # DEBUG: print('returning right')
             return getLocationCost(right)
@@ -158,12 +152,12 @@ def peekDown(origin):
         right = (origin[0], origin[1])
         if not isInBounds(char_map, left):
             # DEBUG: print('returning right')
-            return char_map[right]
+            return getLocationCost(right)
         if not isInBounds(char_map, right):
             # DEBUG: print('returning left')
-            return char_map[left]
+            return getLocationCost(left)
         # DEBUG: print('returning average')
-        return (char_map[left] + char_map[right]) / 2
+        return (getLocationCost(left) + getLocationCost(right)) / 2
     else:
         pass
 
