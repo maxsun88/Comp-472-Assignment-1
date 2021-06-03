@@ -343,9 +343,9 @@ def run(start, end):
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
     visitedPoints[end] = dist[end]  # adding the end point to the visitedPoints
+    del dist[end]  # remove end point from dist
     constructPathIndexList()  # create index list
     printPathInfo()
-    del dist[end]  # remove end point from dist
     # print("Visited Points")
     # print(visitedPoints)
     # print("Dist")
