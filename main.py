@@ -363,3 +363,5 @@ displayMap(char_map, row_num, col_num, index_list)
 
 ##################################################################################################################
 # HEURISTIC FUNCTIONS
+
+#monkey
