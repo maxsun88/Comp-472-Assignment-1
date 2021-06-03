@@ -25,10 +25,8 @@ for i in range(row_num):
         else:
             row.append("n")
     char_map.append(row)
-
+char_map = [['q', 'p'], ['p', 'p']]
 print(char_map)
-
-
 
 ##################################################################################################################
 # generate an array of points pointArr for path finding
@@ -179,8 +177,7 @@ end = ()  # end point TODO:user input
 # visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
 def visitMinDist():
     smallestEntryKey = min(dist, key=dist.get)
-    visitedPoints[smallestEntryKey] = dist[
-        smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
+    visitedPoints[smallestEntryKey] = dist[smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
     del dist[smallestEntryKey]  # remove it from dist
     return smallestEntryKey
 
@@ -189,8 +186,7 @@ def visitMinDist():
 def exploreNeighbours(origin):
     point_right = (origin[0], origin[1] + 1)
     cost_right = peekRight(origin)
-    if (
-            cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
+    if (cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
         total_cost_right = visitedPoints[origin][0] + cost_right  # the distance is cumulative
         updateDistance(point_right, origin, total_cost_right)
 
@@ -217,18 +213,16 @@ def exploreNeighbours(origin):
 def updateDistance(point, parent, newValue):
     if point in dist:
         if newValue < dist[point][0]:
-            dist[point][0] = newValue
-            dist[point][1] = parent
+            dist[point] = (newValue, parent)
 
 
 # checks if algorithm is finished
 # finished if our end point has been explored (its distance is no longer infinity)
-def isFinished():
-    if dist[end][0] is not float("inf"):
+def isFinished(end):
+    if dist[end][0] != float("inf"):
         return True
     else:
         return False
-
 
 # runs the algorithm
 def run(start, end):
@@ -236,9 +230,13 @@ def run(start, end):
         for j in range(pointArr_col):
             dist[(i, j)] = (float("inf"), ())
     dist[start] = (0, ())  # the cost of our starting point is set to 0 so that it is picked first
-    while isFinished is False:
+    print(isFinished(end))
+    while isFinished(end) is False:
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
+    print("Visited Points")
+    print(visitedPoints)
+    print("Dist")
     print(dist)
 
 # now we have found the end point
@@ -273,10 +271,12 @@ def run(start, end):
 
 # print(testing)
 
-run((0,0),(1,1))
-
 # display map to screen
 displayMap(char_map, row_num, col_num)
+
+run((0, 0), (2, 2))
+
+
 
 ##################################################################################################################
 # HEURISTIC FUNCTIONS

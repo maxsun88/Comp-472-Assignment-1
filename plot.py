@@ -56,6 +56,14 @@ def displayMap(char_map, row_num, col_num):
             plt.text(x_coord, y_coord, text,
                      ha="center", va="center", bbox=dict(boxstyle=f"circle,pad=0.2", fc="white"))
 
+    # create markers for different areas
+    for i in range(row_num):
+        for j in range(col_num):
+            text = char_map[i][j]
+            x_coord = (j + 0.5) * width  # x coordinate
+            y_coord = (row_num - i - 0.5) * height  # y coordinate
+            plt.text(x_coord, y_coord, text, fontsize=16, ha="center", va="center")
+
     # make the grids according to the cell sizes
     plt.xticks(np.arange(0, col_num * width, width))
     plt.yticks(np.arange(0, row_num * height, height))
