@@ -1,5 +1,6 @@
 import numpy as np
 from plot import *
+
 ##################################################################################################################
 
 # Global Variable of player
@@ -58,6 +59,7 @@ def isInBounds(arr, index):
     else:
         return False
 
+
 # get costs correlating each kind of areas
 def getLocationCost(tuple):
     i, j = tuple
@@ -77,6 +79,7 @@ def getLocationCost(tuple):
         return c_dic[char_map[i][j]]
     elif PLAYER == 'V':
         return v_dic[char_map[i][j]]
+
 
 # peeks right and returns the cost of moving right
 # moving right along an edge requires us to fetch the locations at the top and at the bottom of the edge and returning the average
@@ -169,6 +172,7 @@ def peekDown(origin):
 
 visitedPoints = {}  # dictionary containing all the points that have been visited already  {(i, j): (cost, (i_parent, j_parent))}
 dist = {}  # dictionary containing all the explored  points and their distances (initially infinity??)  {(i, j): (cost, (i_parent, j_parent))}
+index_list = []  # Calculated Path, a list of indexes on 2d array of pointArr
 start = ()  # start point TODO:user input
 end = ()  # end point TODO:user input
 
@@ -176,7 +180,8 @@ end = ()  # end point TODO:user input
 # visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
 def visitMinDist():
     smallestEntryKey = min(dist, key=dist.get)
-    visitedPoints[smallestEntryKey] = dist[smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
+    visitedPoints[smallestEntryKey] = dist[
+        smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
     del dist[smallestEntryKey]  # remove it from dist
     return smallestEntryKey
 
@@ -185,7 +190,8 @@ def visitMinDist():
 def exploreNeighbours(origin):
     point_right = (origin[0], origin[1] + 1)
     cost_right = peekRight(origin)
-    if (cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
+    if (
+            cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
         total_cost_right = visitedPoints[origin][0] + cost_right  # the distance is cumulative
         updateDistance(point_right, origin, total_cost_right)
 
@@ -223,6 +229,22 @@ def isFinished(end):
     else:
         return False
 
+
+# Create a list of indexes according to the order of visits
+def constructPathIndexList():
+    temp_pt = end
+    while temp_pt != start:
+        index_list.insert(0, temp_pt)
+        temp_pt = visitedPoints[temp_pt][1]
+    index_list.insert(0, temp_pt)
+
+
+def printPathInfo():
+    print("Path Taken:", end=" ")
+    print(*index_list, sep=" -> ")
+    print("Total Cost: {}".format(visitedPoints[end][0]))
+
+
 # runs the algorithm
 def run(start, end):
     for i in range(pointArr_row):
@@ -233,10 +255,13 @@ def run(start, end):
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
     visitedPoints[end] = dist[end]  # adding the end point to the visitedPoints
-    print("Visited Points")
-    print(visitedPoints)
-    print("Dist")
-    print(dist)
+    constructPathIndexList()  # create index list
+    printPathInfo()
+    # print("Visited Points")
+    # print(visitedPoints)
+    # print("Dist")
+    # print(dist)
+
 
 # now we have found the end point
 # TODO: write function that stores/displays the path taken and the total cost
@@ -246,7 +271,7 @@ end = (2, 3)
 run(start, end)
 
 # display map to screen
-displayMap(char_map, row_num, col_num, visitedPoints, start, end)
+displayMap(char_map, row_num, col_num, index_list)
 
 ##################################################################################################################
 # HEURISTIC FUNCTIONS

@@ -13,7 +13,7 @@ def indexToCoord(index, row_num):
     return [index[1] * width, (row_num - index[0]) * height]
 
 
-def displayMap(char_map, row_num, col_num, visitedPoints, start, end):
+def displayMap(char_map, row_num, col_num, index_list):
     # Color Values
     color_vals = [
         ["quarantine", 1],
@@ -75,19 +75,10 @@ def displayMap(char_map, row_num, col_num, visitedPoints, start, end):
     plt.grid(color='white', linestyle='-.', linewidth=3)
 
     # Draw the Paths
-    # Create a list of indexes to visit
-    temp_pt = end
-    index_list = []
-    while temp_pt != start:
-        index_list.insert(0, indexToCoord(temp_pt, row_num))
-        temp_pt = visitedPoints[temp_pt][1]
-    index_list.insert(0, indexToCoord(temp_pt, row_num))
-    print("Index List")
-    print(index_list)
-    # Draw
     for i in range(len(index_list)-1):
-        horizontal = [index_list[i][0], index_list[i+1][0]]
-        vertical = [index_list[i][1], index_list[i+1][1]]
+        horizontal = [indexToCoord(index_list[i], row_num)[0],
+                      indexToCoord(index_list[i+1], row_num)[0]]
+        vertical = [indexToCoord(index_list[i], row_num)[1],
+                    indexToCoord(index_list[i+1], row_num)[1]]
         plt.plot(horizontal, vertical, 'r', marker='o', linewidth=7)
-
     plt.show()
