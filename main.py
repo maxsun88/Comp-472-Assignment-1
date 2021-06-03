@@ -1,10 +1,11 @@
 import numpy as np
+import math
 from plot import *
 
 ##################################################################################################################
 
 # Global Variable of player
-PLAYER = "C"
+PLAYER = "V"
 
 # Number of rows and columns TODO: Change to USER INPUT
 row_num = 3
@@ -26,7 +27,7 @@ for i in range(row_num):
         else:
             row.append("n")
     char_map.append(row)
-print(char_map)
+#print(char_map)
 
 ##################################################################################################################
 # generate an array of points pointArr for path finding
@@ -75,9 +76,9 @@ def getLocationCost(tuple):
         "v": 0,
         "n": 2
     }
-    if PLAYER == 'C':  # Covid patient
+    if PLAYER.lower() == 'c':  # Covid patient
         return c_dic[char_map[i][j]]
-    elif PLAYER == 'V':
+    elif PLAYER.lower() == 'v':
         return v_dic[char_map[i][j]]
 
 
@@ -160,6 +161,69 @@ def peekDown(origin):
     else:
         pass
 
+#returns the cost of the upper left diagonal
+def peekUpperLeftDiag(origin):
+    dest = (origin[0] - 1, origin[1] - 1)
+    if (isInBounds(pointArr, dest)):
+        #first triangle
+        edge1 = peekLeft(origin)
+        edge2 = peekDown(dest)
+        first_cost = math.sqrt(edge1**2 + edge2**2)
+        #second triangle
+        edge1 = peekUp(origin)
+        edge2 = peekRight(dest)
+        second_cost = math.sqrt(edge1**2 + edge2**2)
+        return max(first_cost, second_cost)
+    else:
+        pass
+
+#returns the cost of the upper right diagonal
+def peekUpperRightDiag(origin):
+    dest = (origin[0] - 1, origin[1] + 1)
+    if (isInBounds(pointArr, dest)):
+        #first triangle
+        edge1 = peekRight(origin)
+        edge2 = peekDown(dest)
+        first_cost = math.sqrt(edge1**2 + edge2**2)
+        #second triangle
+        edge1 = peekUp(origin)
+        edge2 = peekLeft(dest)
+        second_cost = math.sqrt(edge1**2 + edge2**2)
+        return max(first_cost, second_cost)
+    else:
+        pass
+
+#returns the cost of the lower left diagonal
+def peekLowerLeftDiag(origin):
+    dest = (origin[0] + 1, origin[1] - 1)
+    if (isInBounds(pointArr, dest)):
+        #first triangle
+        edge1 = peekLeft(origin)
+        edge2 = peekUp(dest)
+        first_cost = math.sqrt(edge1**2 + edge2**2)
+        #second triangle
+        edge1 = peekDown(origin)
+        edge2 = peekRight(dest)
+        second_cost = math.sqrt(edge1**2 + edge2**2)
+        return max(first_cost, second_cost)
+    else:
+        pass
+
+#returns the cost of the lower right diagonal
+def peekLowerRightDiag(origin):
+    dest = (origin[0] + 1, origin[1] + 1)
+    if (isInBounds(pointArr, dest)):
+        #first triangle
+        edge1 = peekRight(origin)
+        edge2 = peekUp(dest)
+        first_cost = math.sqrt(edge1**2 + edge2**2)
+        #second triangle
+        edge1 = peekDown(origin)
+        edge2 = peekLeft(dest)
+        second_cost = math.sqrt(edge1**2 + edge2**2)
+        return max(first_cost, second_cost)
+    else:
+        pass
 
 ##################################################################################################################
 # DIJKSTRA ALGORITHM????
@@ -213,6 +277,30 @@ def exploreNeighbours(origin):
         total_cost_down = visitedPoints[origin][0] + cost_down
         updateDistance(point_down, origin, total_cost_down)
 
+    if(PLAYER.lower() == 'v'): #if the player is a covid patient then we can also explore diagonal paths
+        point_upperLeft = (origin[0] - 1, origin[1] - 1)
+        cost_upperLeft = peekUpperLeftDiag(origin)
+        if (cost_upperLeft is not None and point_upperLeft not in visitedPoints):
+            total_cost_upperLeft = visitedPoints[origin][0] + cost_upperLeft
+            updateDistance(point_upperLeft, origin, total_cost_upperLeft)
+
+        point_upperRight = (origin[0] - 1, origin[1] + 1)
+        cost_upperRight = peekUpperRightDiag(origin)
+        if (cost_upperRight is not None and point_upperRight not in visitedPoints):
+            total_cost_upperRight = visitedPoints[origin][0] + cost_upperRight
+            updateDistance(point_upperRight, origin, total_cost_upperRight)
+
+        point_lowerLeft = (origin[0] + 1, origin[1] - 1)
+        cost_lowerLeft = peekLowerLeftDiag(origin)
+        if (cost_lowerLeft is not None and point_lowerLeft not in visitedPoints):
+            total_cost_lowerLeft = visitedPoints[origin][0] + cost_lowerLeft
+            updateDistance(point_lowerLeft, origin, total_cost_lowerLeft)
+
+        point_lowerRight = (origin[0] + 1, origin[1] + 1)
+        cost_lowerRight = peekLowerRightDiag(origin)
+        if (cost_lowerRight is not None and point_lowerRight not in visitedPoints):
+            total_cost_lowerRight = visitedPoints[origin][0] + cost_lowerRight
+            updateDistance(point_lowerRight, origin, total_cost_lowerRight)
 
 # updates distance and parent value in dist{} if it is lower than the current one
 def updateDistance(point, parent, newValue):
@@ -257,11 +345,11 @@ def run(start, end):
     visitedPoints[end] = dist[end]  # adding the end point to the visitedPoints
     constructPathIndexList()  # create index list
     printPathInfo()
+    del dist[end]  # remove end point from dist
     # print("Visited Points")
     # print(visitedPoints)
     # print("Dist")
     # print(dist)
-
 
 # now we have found the end point
 # TODO: write function that stores/displays the path taken and the total cost
