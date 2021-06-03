@@ -4,8 +4,16 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 import matplotlib.cm as cm
 
+width = 0.2  # cell width
+height = 0.1  # cell height
 
-def displayMap(char_map, row_num, col_num):
+
+#  transfer an array index to coordinate, e.g. (1,1) -> [0.2, 0.1]
+def indexToCoord(index, row_num):
+    return [index[1] * width, (row_num - index[0]) * height]
+
+
+def displayMap(char_map, row_num, col_num, visitedPoints, start, end):
     # Color Values
     color_vals = [
         ["quarantine", 1],
@@ -13,9 +21,6 @@ def displayMap(char_map, row_num, col_num):
         ["vaccine", 3],
         ["neutral", 4]
     ]
-
-    width = 0.2  # cell width
-    height = 0.1  # cell height
 
     # Create color map for UI purpose only
     color_map = []
@@ -69,17 +74,20 @@ def displayMap(char_map, row_num, col_num):
     plt.yticks(np.arange(0, row_num * height, height))
     plt.grid(color='white', linestyle='-.', linewidth=3)
 
-    # Draw the Paths TODO: Provide a function
-    # x2, y2 = [0.0, 0.2], \
-    #          [0.3, 0.3]
-    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
-    #
-    # x2, y2 = [0.2, 0.2], \
-    #          [0.3, 0.2]
-    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
-    #
-    # x2, y2 = [0.2, 0.4], \
-    #          [0.2, 0.2]
-    # plt.plot(x2, y2, 'r', marker='o', linewidth=4)
+    # Draw the Paths
+    # Create a list of indexes to visit
+    temp_pt = end
+    index_list = []
+    while temp_pt != start:
+        index_list.insert(0, indexToCoord(temp_pt, row_num))
+        temp_pt = visitedPoints[temp_pt][1]
+    index_list.insert(0, indexToCoord(temp_pt, row_num))
+    print("Index List")
+    print(index_list)
+    # Draw
+    for i in range(len(index_list)-1):
+        horizontal = [index_list[i][0], index_list[i+1][0]]
+        vertical = [index_list[i][1], index_list[i+1][1]]
+        plt.plot(horizontal, vertical, 'r', marker='o', linewidth=7)
 
     plt.show()

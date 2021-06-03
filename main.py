@@ -6,8 +6,8 @@ from plot import *
 PLAYER = "C"
 
 # Number of rows and columns TODO: Change to USER INPUT
-row_num = 2
-col_num = 2
+row_num = 3
+col_num = 4
 
 # generate char_map of locations
 char_map = []
@@ -25,7 +25,6 @@ for i in range(row_num):
         else:
             row.append("n")
     char_map.append(row)
-char_map = [['q', 'p'], ['p', 'p']]
 print(char_map)
 
 ##################################################################################################################
@@ -230,10 +229,10 @@ def run(start, end):
         for j in range(pointArr_col):
             dist[(i, j)] = (float("inf"), ())
     dist[start] = (0, ())  # the cost of our starting point is set to 0 so that it is picked first
-    print(isFinished(end))
     while isFinished(end) is False:
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
+    visitedPoints[end] = dist[end]  # adding the end point to the visitedPoints
     print("Visited Points")
     print(visitedPoints)
     print("Dist")
@@ -242,41 +241,12 @@ def run(start, end):
 # now we have found the end point
 # TODO: write function that stores/displays the path taken and the total cost
 
-
-# TESTING STUFF
-# test = {(1, 2): (200, (0,0)), (3, 0): (100, (100,0))}
-# test2 = {}
-# print(test)
-# move minimum value from test to test2
-# smallestEntryKey = min(test, key = test.get)
-# test2[smallestEntryKey] = test[smallestEntryKey] #creates a new entry identical to the smallest entry in dist
-# del test[smallestEntryKey] #remove it from dist
-# print(test)
-# print(test2)
-# prints the cost
-# print(test[1, 2][0])
-# prints the parent point
-# print(test[1,2][1])
-# if (1, 2) in test:
-# 	print('heck yeah')
-# adding new point and value
-# test[(0,1)] = 400, (0,0)
-# print(test)
-
-# testing = {}
-
-# for i in range(pointArr_row):
-# 	for j in range(pointArr_col):
-# 		testing[(i,j)] = (float("inf"), ())
-
-# print(testing)
+start = (0, 0)
+end = (2, 3)
+run(start, end)
 
 # display map to screen
-displayMap(char_map, row_num, col_num)
-
-run((0, 0), (2, 2))
-
-
+displayMap(char_map, row_num, col_num, visitedPoints, start, end)
 
 ##################################################################################################################
 # HEURISTIC FUNCTIONS
