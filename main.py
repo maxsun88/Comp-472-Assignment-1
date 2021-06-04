@@ -239,26 +239,32 @@ index_list = []  # Calculated Path, a list of indexes on 2d array of pointArr
 start = ()  # start point TODO:user input
 end = ()  # end point TODO:user input
 
-
-# gets heuristic from a given point to our end destination
-# heuristic changes depending on the player
+#gets heuristic from a given point to our end destination
+#heuristic changes depending on the player
 def getHeuristic(point, end):
-    # manhattan
-    if PLAYER.lower() == "c":
-        h_displacement = abs(end[1] - point[1])
-        v_displacement = abs(end[0] - point[0])
-        return (h_displacement + v_displacement) * 3  # the maximum edge cost is 3
-    # Chebyshev distance or octile distance
-    if PLAYER.lower() == "v":
-        D = 3
-        D_d = 1.414  # Diagonal cost
-        dx = abs(end[1] - point[1])
-        dy = abs(end[0] - point[0])
-        return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+    #     #manhattan
+    #     if(PLAYER.lower() == "c"):
+    #         h_displacement = abs(end[1] - point[1])
+    #         v_displacement = abs(end[0] - point[0])
+    #         return (h_displacement + v_displacement)*0.5 #the maximum edge cost is 3
+    #     #eucledian??
+    #     if PLAYER.lower() == "v":
+    #         D = 3
+    #         D_d = 1.414  # Diagonal cost
+    #         dx = abs(end[1] - point[1])
+    #         dy = abs(end[0] - point[0])
+    #         return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+    pass
 
+def setHeuristic(pointArr):
+    #shared first part: setting all corners to h=0
+    
+    #if patient = c; loop for all h=0 for mahnattan
+    
+    #if patient = v; loop for all h=0 for diagonal
+    pass
 
-# visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then
-# returns the point
+# visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
 def visitMinDist():
     smallestEntryKey = min(dist, key=dist.get)
     visitedPoints[smallestEntryKey] = dist[
@@ -327,7 +333,7 @@ def updateDistance(point, parent, newCost):
         if (newCost + getHeuristic(point, end)) < dist[point][0]:
             dist[point] = (newCost + getHeuristic(point, end), newCost, parent)
 
-
+#TODO:finished when h=0
 # checks if algorithm is finished
 # finished if our end point has been explored (its distance is no longer infinity)
 def isFinished(end):
