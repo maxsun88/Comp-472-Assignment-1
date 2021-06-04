@@ -39,7 +39,7 @@ nbPoints = pointArr_row * pointArr_col
 pointList = []
 
 for i in range(nbPoints):
-    pointList.append(i + 1)
+    pointList.append(float("inf"))
 
 tempPointArr = np.asarray(pointList)
 pointArr = np.reshape(tempPointArr, (pointArr_row, pointArr_col))
@@ -232,27 +232,41 @@ visitedPoints = {}  # dictionary containing all the points that have been visite
 dist = {}  # dictionary containing all the explored  points and their distances {(i, j): (heuristic+cost, cost, (i_parent, j_parent))}
 index_list = []  # Calculated Path, a list of indexes on 2d array of pointArr
 start = ()  # start point TODO:user input
-end = ()  # end point TODO:user input
+#end = ()  # end point TODO:user input
 
-
-#gets heuristic from a given point to our end destination
-#heuristic changes depending on the player
-# def getHeuristic(point, end):
-#     #manhattan
-#     if(PLAYER.lower() == "c"):
-#         h_displacement = abs(end[1] - point[1])
-#         v_displacement = abs(end[0] - point[0])
-#         return (h_displacement + v_displacement)*0.5 #the maximum edge cost is 3
-#     #eucledian??
-#     if(PLAYER.lower() == "v"):
-#         pass
-
-def setHeuristic(pointArr):
-    #shared first part: setting all corners to h=0
+#stores heuristic values in pointArr
+#multiple goals heuristic
+def setHeuristic():
+    #setting all corners to h=0 and storing them
+    listOfEndPoints = []
+    for i in range(row_num):
+        for j in range(col_num):
+            if((PLAYER.lower() == "c" and char_map[i][j] == "q") or (PLAYER.lower() == "v" and char_map[i][j] == "v")):
+                pointArr[i][j] = 0
+                listOfEndPoints.append((i,j))
+                pointArr[i+1][j] = 0
+                listOfEndPoints.append((i+1,j))
+                pointArr[i][j+1] = 0
+                listOfEndPoints.append((i,j+1))
+                pointArr[i+1][j+1] = 0
+                listOfEndPoints.append((i+1,j+1))
     
-    #if patient = c; loop for all h=0 for mahnattan
-    
-    #if patient = v; loop for all h=0 for diagonal
+    #if covid patient, loop manhattan
+    if (PLAYER.lower() == "c"):
+        for endPoint in listOfEndPoints: #loop manhattan based on all the end points
+            for i in range(pointArr_row):
+                for j in range(pointArr_col):
+                    if(pointArr[i][j] != 0): #make sure we are not changing the heuristic value of an end point
+                        h_displacement = abs(endPoint[0] - i)
+                        v_displacement = abs(endPoint[1] - j)
+                        result = (h_displacement + v_displacement)*0.5
+                        if(result < pointArr[i][j]):
+                             pointArr[i][j] = result
+
+#returns heuristic at a point (i,j)
+def getHeuristic(point):
+    return pointArr[point[0]][point[1]]
+
 
 # visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
 def visitMinDist():
@@ -316,21 +330,27 @@ def exploreNeighbours(origin):
 # takes heuristic into account
 def updateDistance(point, parent, newCost):
     if point in dist:
-        if (newCost + getHeuristic(point, end)) < dist[point][0]:
-            dist[point] = (newCost + getHeuristic(point, end), newCost, parent)
+        if (newCost + getHeuristic(point)) < dist[point][0]:
+            dist[point] = (newCost + getHeuristic(point), newCost, parent)
 
-#TODO:finished when h=0
 # checks if algorithm is finished
-# finished if our end point has been explored (its distance is no longer infinity)
-def isFinished(end):
-    if dist[end][0] != float("inf"):
-        return True
-    else:
-        return False
+# finished when we've explored a point where h=0
+def isFinished():
+    for point in dist:
+        if(dist[point][0] != float("inf") and pointArr[point[0]][point[1]] == 0):
+            return True
+    return False
+
+#returns our final destination which is the first point that was found with h=0
+def getFinalDestination():
+    for point in dist:
+        if(dist[point][0] != float("inf") and pointArr[point[0]][point[1]] == 0):
+            return point
+    return False
 
 
 # Create a list of indexes according to the order of visits
-def constructPathIndexList():
+def constructPathIndexList(end):
     temp_pt = end
     while temp_pt != start:
         index_list.insert(0, temp_pt)
@@ -338,30 +358,34 @@ def constructPathIndexList():
     index_list.insert(0, temp_pt)
 
 
-def printPathInfo():
+def printPathInfo(end):
     print("Path Taken:", end=" ")
     print(*index_list, sep=" -> ")
     print("Total Cost: {}".format(visitedPoints[end][1]))
 
 
 # runs the algorithm
-def run(start, end):
+def run(start):
+    setHeuristic()
     for i in range(pointArr_row):
         for j in range(pointArr_col):
-            dist[(i, j)] = (float("inf"), float("inf"), ())
-    dist[start] = (getHeuristic(start, end)+0, 0, ())  # the cost of our starting point is set to 0
-    while isFinished(end) is False:
+            dist[(i, j)] = (float("inf"), float("inf"), ()) #{(i, j): (heuristic+cost, cost, (i_parent, j_parent))}
+    dist[start] = (getHeuristic(start)+0, 0, ())
+    while isFinished() is False:
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
-    visitedPoints[end] = dist[end]  # adding the end point to the visitedPoints
-    del dist[end]  # remove end point from dist
-    constructPathIndexList()  # create index list
-    printPathInfo()
+    final_end = getFinalDestination()
+    visitedPoints[final_end] = dist[final_end]  # adding the end point to the visitedPoints
+    del dist[final_end]  # remove end point from dist
+    print("The location with lowest cost is at: ", final_end)
+    constructPathIndexList(final_end)  # create index list
+    printPathInfo(final_end)
 
 
 start = (0, 0)
-end = (2, 3)
-run(start, end)
+#end = (2, 3)
+run(start)
 
 # display map to screen
 displayMap(char_map, row_num, col_num, index_list)
+
