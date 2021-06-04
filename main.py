@@ -5,11 +5,11 @@ from plot import *
 ##################################################################################################################
 
 # Global Variable of player
-PLAYER = "C"
+PLAYER = "V"
 
 # Number of rows and columns TODO: Change to USER INPUT
-row_num = 3
-col_num = 4
+row_num = 10
+col_num = 10
 
 # generate char_map of locations
 char_map = []
@@ -27,7 +27,7 @@ for i in range(row_num):
         else:
             row.append("n")
     char_map.append(row)
-#print(char_map)
+# print(char_map)
 
 ##################################################################################################################
 # generate an array of points pointArr for path finding
@@ -161,69 +161,74 @@ def peekDown(origin):
     else:
         pass
 
-#returns the cost of the upper left diagonal, without heuristic
+
+# returns the cost of the upper left diagonal, without heuristic
 def peekUpperLeftDiag(origin):
     dest = (origin[0] - 1, origin[1] - 1)
     if (isInBounds(pointArr, dest)):
-        #first triangle
+        # first triangle
         edge1 = peekLeft(origin)
         edge2 = peekDown(dest)
-        first_cost = math.sqrt(edge1**2 + edge2**2)
-        #second triangle
+        first_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
+        # second triangle
         edge1 = peekUp(origin)
         edge2 = peekRight(dest)
-        second_cost = math.sqrt(edge1**2 + edge2**2)
+        second_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
         return max(first_cost, second_cost)
     else:
         pass
 
-#returns the cost of the upper right diagonal, without heuristic
+
+# returns the cost of the upper right diagonal, without heuristic
 def peekUpperRightDiag(origin):
     dest = (origin[0] - 1, origin[1] + 1)
     if (isInBounds(pointArr, dest)):
-        #first triangle
+        # first triangle
         edge1 = peekRight(origin)
         edge2 = peekDown(dest)
-        first_cost = math.sqrt(edge1**2 + edge2**2)
-        #second triangle
+        first_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
+        # second triangle
         edge1 = peekUp(origin)
         edge2 = peekLeft(dest)
-        second_cost = math.sqrt(edge1**2 + edge2**2)
+        second_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
         return max(first_cost, second_cost)
     else:
         pass
 
-#returns the cost of the lower left diagonal, without heuristic
+
+# returns the cost of the lower left diagonal, without heuristic
 def peekLowerLeftDiag(origin):
     dest = (origin[0] + 1, origin[1] - 1)
     if (isInBounds(pointArr, dest)):
-        #first triangle
+        # first triangle
         edge1 = peekLeft(origin)
         edge2 = peekUp(dest)
-        first_cost = math.sqrt(edge1**2 + edge2**2)
-        #second triangle
+        first_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
+        # second triangle
         edge1 = peekDown(origin)
         edge2 = peekRight(dest)
-        second_cost = math.sqrt(edge1**2 + edge2**2)
+        second_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
         return max(first_cost, second_cost)
     else:
         pass
 
-#returns the cost of the lower right diagonal, without heuristic
+
+# returns the cost of the lower right diagonal, without heuristic
 def peekLowerRightDiag(origin):
     dest = (origin[0] + 1, origin[1] + 1)
     if (isInBounds(pointArr, dest)):
-        #first triangle
+        # first triangle
         edge1 = peekRight(origin)
         edge2 = peekUp(dest)
-        first_cost = math.sqrt(edge1**2 + edge2**2)
-        #second triangle
+        first_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
+        # second triangle
         edge1 = peekDown(origin)
         edge2 = peekLeft(dest)
-        second_cost = math.sqrt(edge1**2 + edge2**2)
+        second_cost = math.sqrt(edge1 ** 2 + edge2 ** 2)
         return max(first_cost, second_cost)
     else:
         pass
+
 
 ##################################################################################################################
 # A*
@@ -235,30 +240,39 @@ start = ()  # start point TODO:user input
 end = ()  # end point TODO:user input
 
 
-#gets heuristic from a given point to our end destination
-#heuristic changes depending on the player
+# gets heuristic from a given point to our end destination
+# heuristic changes depending on the player
 def getHeuristic(point, end):
-    #manhattan
-    if(PLAYER.lower() == "c"):
+    # manhattan
+    if PLAYER.lower() == "c":
         h_displacement = abs(end[1] - point[1])
         v_displacement = abs(end[0] - point[0])
-        return (h_displacement + v_displacement)*3 #the maximum edge cost is 3
-    #eucledian??
-    if(PLAYER.lower() == "v"):
-        pass
+        return (h_displacement + v_displacement) * 3  # the maximum edge cost is 3
+    # Chebyshev distance or octile distance
+    if PLAYER.lower() == "v":
+        D = 3
+        D_d = 1.414  # Diagonal cost
+        dx = abs(end[1] - point[1])
+        dy = abs(end[0] - point[0])
+        return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
 
-# visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then returns the point
+
+# visits a point with the lowest distance by adding removing it from dist{} and adding it to visitedPoints{} then
+# returns the point
 def visitMinDist():
     smallestEntryKey = min(dist, key=dist.get)
-    visitedPoints[smallestEntryKey] = dist[smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
+    visitedPoints[smallestEntryKey] = dist[
+        smallestEntryKey]  # creates a new entry identical to the smallest entry in dist
     del dist[smallestEntryKey]  # remove it from dist
     return smallestEntryKey
+
 
 # explores neighbour points and updates their distance value in dist{}
 def exploreNeighbours(origin):
     point_right = (origin[0], origin[1] + 1)
     cost_right = peekRight(origin)
-    if (cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
+    if (
+            cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
         total_cost_right = visitedPoints[origin][1] + cost_right  # the distance is cumulative
         updateDistance(point_right, origin, total_cost_right)
 
@@ -280,7 +294,7 @@ def exploreNeighbours(origin):
         total_cost_down = visitedPoints[origin][1] + cost_down
         updateDistance(point_down, origin, total_cost_down)
 
-    if(PLAYER.lower() == 'v'): #if the player is a covid patient then we can also explore diagonal paths
+    if (PLAYER.lower() == 'v'):  # if the player is a covid patient then we can also explore diagonal paths
         point_upperLeft = (origin[0] - 1, origin[1] - 1)
         cost_upperLeft = peekUpperLeftDiag(origin)
         if (cost_upperLeft is not None and point_upperLeft not in visitedPoints):
@@ -304,6 +318,7 @@ def exploreNeighbours(origin):
         if (cost_lowerRight is not None and point_lowerRight not in visitedPoints):
             total_cost_lowerRight = visitedPoints[origin][1] + cost_lowerRight
             updateDistance(point_lowerRight, origin, total_cost_lowerRight)
+
 
 # updates distance and parent value in dist{} if it is lower than the current one
 # takes heuristic into account
@@ -342,7 +357,7 @@ def run(start, end):
     for i in range(pointArr_row):
         for j in range(pointArr_col):
             dist[(i, j)] = (float("inf"), float("inf"), ())
-    dist[start] = (getHeuristic(start, end)+0, 0, ())  # the cost of our starting point is set to 0
+    dist[start] = (getHeuristic(start, end) + 0, 0, ())  # the cost of our starting point is set to 0
     while isFinished(end) is False:
         minDist = visitMinDist()  # visit point with minimum distance in dist{}
         exploreNeighbours(minDist)  # we explore all its neighbours and update their distance values
@@ -352,8 +367,8 @@ def run(start, end):
     printPathInfo()
 
 
-start = (0, 0)
-end = (2, 3)
+start = (6, 3)
+end = (0, 10)
 run(start, end)
 
 # display map to screen
