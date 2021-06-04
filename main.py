@@ -242,19 +242,19 @@ end = ()  # end point TODO:user input
 #gets heuristic from a given point to our end destination
 #heuristic changes depending on the player
 def getHeuristic(point, end):
-    #     #manhattan
-    #     if(PLAYER.lower() == "c"):
-    #         h_displacement = abs(end[1] - point[1])
-    #         v_displacement = abs(end[0] - point[0])
-    #         return (h_displacement + v_displacement)*0.5 #the maximum edge cost is 3
-    #     #eucledian??
-    #     if PLAYER.lower() == "v":
-    #         D = 3
-    #         D_d = 1.414  # Diagonal cost
-    #         dx = abs(end[1] - point[1])
-    #         dy = abs(end[0] - point[0])
-    #         return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
-    pass
+    #manhattan
+    if(PLAYER.lower() == "c"):
+        h_displacement = abs(end[1] - point[1])
+        v_displacement = abs(end[0] - point[0])
+        return (h_displacement + v_displacement)*0.5 #the maximum edge cost is 3
+    #eucledian??
+    if PLAYER.lower() == "v":
+        D = 3
+        D_d = 1.414  # Diagonal cost
+        dx = abs(end[1] - point[1])
+        dy = abs(end[0] - point[0])
+        # return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+        return 0
 
 def setHeuristic(pointArr):
     #shared first part: setting all corners to h=0
@@ -275,55 +275,51 @@ def visitMinDist():
 
 # explores neighbour points and updates their distance value in dist{}
 def exploreNeighbours(origin):
+    neighbor_list = []
+    # Right
     point_right = (origin[0], origin[1] + 1)
     cost_right = peekRight(origin)
-    if (
-            cost_right is not None and point_right not in visitedPoints):  # make sure the cost of going right isn't None and the point has not already been visited
-        total_cost_right = visitedPoints[origin][1] + cost_right  # the distance is cumulative
-        updateDistance(point_right, origin, total_cost_right)
-
+    neighbor_list.append((point_right, cost_right))
+    # Left
     point_left = (origin[0], origin[1] - 1)
     cost_left = peekLeft(origin)
-    if (cost_left is not None and point_left not in visitedPoints):
-        total_cost_left = visitedPoints[origin][1] + cost_left
-        updateDistance(point_left, origin, total_cost_left)
-
+    neighbor_list.append((point_left, cost_left))
+    # Up
     point_up = (origin[0] - 1, origin[1])
     cost_up = peekUp(origin)
-    if (cost_up is not None and point_up not in visitedPoints):
-        total_cost_up = visitedPoints[origin][1] + cost_up
-        updateDistance(point_up, origin, total_cost_up)
-
+    neighbor_list.append((point_up, cost_up))
+    # Down
     point_down = (origin[0] + 1, origin[1])
     cost_down = peekDown(origin)
-    if (cost_down is not None and point_down not in visitedPoints):
-        total_cost_down = visitedPoints[origin][1] + cost_down
-        updateDistance(point_down, origin, total_cost_down)
-
-    if (PLAYER.lower() == 'v'):  # if the player is a covid patient then we can also explore diagonal paths
+    neighbor_list.append((point_down, cost_down))
+    if PLAYER.lower() == 'v':  # if the player is a covid patient then we can also explore diagonal paths
+        # Upper Left
         point_upperLeft = (origin[0] - 1, origin[1] - 1)
         cost_upperLeft = peekUpperLeftDiag(origin)
-        if (cost_upperLeft is not None and point_upperLeft not in visitedPoints):
-            total_cost_upperLeft = visitedPoints[origin][1] + cost_upperLeft
-            updateDistance(point_upperLeft, origin, total_cost_upperLeft)
-
+        neighbor_list.append((point_upperLeft, cost_upperLeft))
+        # Upper Right
         point_upperRight = (origin[0] - 1, origin[1] + 1)
         cost_upperRight = peekUpperRightDiag(origin)
-        if (cost_upperRight is not None and point_upperRight not in visitedPoints):
-            total_cost_upperRight = visitedPoints[origin][1] + cost_upperRight
-            updateDistance(point_upperRight, origin, total_cost_upperRight)
-
+        neighbor_list.append((point_upperRight, cost_upperRight))
+        # Lower Left
         point_lowerLeft = (origin[0] + 1, origin[1] - 1)
         cost_lowerLeft = peekLowerLeftDiag(origin)
-        if (cost_lowerLeft is not None and point_lowerLeft not in visitedPoints):
-            total_cost_lowerLeft = visitedPoints[origin][1] + cost_lowerLeft
-            updateDistance(point_lowerLeft, origin, total_cost_lowerLeft)
-
+        neighbor_list.append((point_lowerLeft, cost_lowerLeft))
+        # Lower Right
         point_lowerRight = (origin[0] + 1, origin[1] + 1)
         cost_lowerRight = peekLowerRightDiag(origin)
-        if (cost_lowerRight is not None and point_lowerRight not in visitedPoints):
-            total_cost_lowerRight = visitedPoints[origin][1] + cost_lowerRight
-            updateDistance(point_lowerRight, origin, total_cost_lowerRight)
+        neighbor_list.append((point_lowerRight, cost_lowerRight))
+    # Update information for each neighbor
+    for neighbor in neighbor_list:
+        updateNeighbor(neighbor[0], neighbor[1], origin)
+    print(neighbor_list)
+
+
+# update neighboring node's path information
+def updateNeighbor(point, cost, origin):
+    if cost is not None and point not in visitedPoints:
+        total_cost = visitedPoints[origin][1] + cost
+        updateDistance(point, origin, total_cost)
 
 
 # updates distance and parent value in dist{} if it is lower than the current one
@@ -373,8 +369,8 @@ def run(start, end):
     printPathInfo()
 
 
-start = (6, 3)
-end = (0, 10)
+start = (8, 3)
+end = (2, 10)
 run(start, end)
 
 # display map to screen
