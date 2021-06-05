@@ -267,7 +267,7 @@ def setHeuristic():
                 pointArr[i + 1][j + 1] = 0
                 listOfEndPoints.append((i + 1, j + 1))
 
-        for endPoint in listOfEndPoints:  # loop manhattan based on all the end points
+        for endPoint in listOfEndPoints:  # loop based on all the end points
             for i in range(pointArr_row):
                 for j in range(pointArr_col):
                     if pointArr[i][j] != 0:  # make sure we are not changing the heuristic value of an end point
@@ -278,13 +278,15 @@ def setHeuristic():
                             result = (h_displacement + v_displacement) * 0.5
                             if result < pointArr[i][j]:
                                 pointArr[i][j] = result
-                        #  Chebyshev distance
+                        # if vaccine patient, loop Chebyshev distance
                         if PLAYER.lower() == "v":
                             D = 0.5
                             D_d = 1.414 / 2  # Diagonal cost
                             dx = abs(endPoint[0] - i)
                             dy = abs(endPoint[1] - j)
-                            return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+                            result = D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+                            if result < pointArr[i][j]:
+                                pointArr[i][j] = result
 
 
 # returns heuristic at a point (i,j)

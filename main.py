@@ -44,14 +44,14 @@ while True:
 initializeInputUtil(PLAYER, char_map, row_num, col_num, plot.width, plot.height)
 
 print("")
-START_COORD = inputCoordinate("Enter the coordinate of the starting point")
+START_COORD = inputCoordinate("Enter the coordinate of the starting point by using the gradations at the sides of the graph")
 print("Your start coordinate is {}".format(START_COORD))
 start = coordinateToIndex(START_COORD)
 print("Starting point's map index is {}".format(start))
 
 while True:
     print("")
-    END_COORD = inputCoordinate("Enter the coordinate of the ending point")
+    END_COORD = inputCoordinate("Enter the coordinate of the ending point by using the gradations at the sides of the graph")
     if checkDestination(END_COORD):
         print("Correct Destination, program running...")
         break
