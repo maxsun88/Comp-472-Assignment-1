@@ -7,12 +7,12 @@ from mapUtility import *
 
 # Global Variable of player
 PLAYER = ""
-# Number of rows and columns TODO: Change to USER INPUT
+# Number of rows and columns
 row_num = 0
 col_num = 0
 # Map representing different areas
 char_map = []
-start = ()  # start point TODO:user input
+start = ()  # start point
 index_list = []  # Calculated Path, a list of indexes on 2d array of pointArr
 
 print("**************************************************************************")

@@ -3,7 +3,6 @@ import random
 import numpy as np
 import math
 
-
 PLAYER = ""
 char_map = []
 pointArr = []
@@ -258,7 +257,7 @@ def setHeuristic():
     listOfEndPoints = []
     for i in range(row_num):
         for j in range(col_num):
-            if ((PLAYER.lower() == "c" and char_map[i][j] == "q") or (PLAYER.lower() == "v" and char_map[i][j] == "v")):
+            if (PLAYER.lower() == "c" and char_map[i][j] == "q") or (PLAYER.lower() == "v" and char_map[i][j] == "v"):
                 pointArr[i][j] = 0
                 listOfEndPoints.append((i, j))
                 pointArr[i + 1][j] = 0
@@ -268,24 +267,24 @@ def setHeuristic():
                 pointArr[i + 1][j + 1] = 0
                 listOfEndPoints.append((i + 1, j + 1))
 
-    # if covid patient, loop manhattan
-    if (PLAYER.lower() == "c"):
         for endPoint in listOfEndPoints:  # loop manhattan based on all the end points
             for i in range(pointArr_row):
                 for j in range(pointArr_col):
-                    if (pointArr[i][j] != 0):  # make sure we are not changing the heuristic value of an end point
-                        h_displacement = abs(endPoint[0] - i)
-                        v_displacement = abs(endPoint[1] - j)
-                        result = (h_displacement + v_displacement) * 0.5
-                        if (result < pointArr[i][j]):
-                            pointArr[i][j] = result
-
-    #     if PLAYER.lower() == "v":
-    #         D = 3
-    #         D_d = 1.414  # Diagonal cost
-    #         dx = abs(end[1] - point[1])
-    #         dy = abs(end[0] - point[0])
-    #         return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
+                    if pointArr[i][j] != 0:  # make sure we are not changing the heuristic value of an end point
+                        # if covid patient, loop manhattan
+                        if PLAYER.lower() == "c":
+                            h_displacement = abs(endPoint[0] - i)
+                            v_displacement = abs(endPoint[1] - j)
+                            result = (h_displacement + v_displacement) * 0.5
+                            if result < pointArr[i][j]:
+                                pointArr[i][j] = result
+                        #  Chebyshev distance
+                        if PLAYER.lower() == "v":
+                            D = 0.5
+                            D_d = 1.414 / 2  # Diagonal cost
+                            dx = abs(endPoint[0] - i)
+                            dy = abs(endPoint[1] - j)
+                            return D * (dx + dy) + (D_d - 2 * D) * min(dx, dy)
 
 
 # returns heuristic at a point (i,j)
@@ -321,7 +320,7 @@ def exploreNeighbours(origin):
     point_down = (origin[0] + 1, origin[1])
     cost_down = peekDown(origin)
     neighbor_list.append((point_down, cost_down))
-    if PLAYER.lower() == 'v':  # if the player is a covid patient then we can also explore diagonal paths
+    if PLAYER.lower() == 'v':  # if the player is a vaccine receiver then we can also explore diagonal paths
         # Upper Left
         point_upperLeft = (origin[0] - 1, origin[1] - 1)
         cost_upperLeft = peekUpperLeftDiag(origin)
