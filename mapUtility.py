@@ -406,6 +406,6 @@ def run(start):
     final_end = getFinalDestination()
     visitedPoints[final_end] = dist[final_end]  # adding the end point to the visitedPoints
     del dist[final_end]  # remove end point from dist
-    print("The location with lowest cost is at: ", final_end)
+    print("We found this location with lowest cost at: ", final_end)
     constructPathIndexList(final_end)  # create index list
     printPathInfo(final_end)
