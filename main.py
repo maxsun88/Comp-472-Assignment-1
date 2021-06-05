@@ -1,10 +1,22 @@
+import threading
+import time
+
 import plot
 from inputUtility import *
 from plot import *
 from mapUtility import *
 
-##################################################################################################################
+clickedCoordinate = ()  # Store the clicked Coordinate
 
+
+# Function to listen to clicking event
+def onclick(event):
+    ix, iy = event.xdata, event.ydata
+    global clickedCoordinate
+    clickedCoordinate = (ix, iy)
+
+
+##################################################################################################################
 # Global Variable of player
 PLAYER = ""
 # Number of rows and columns
@@ -22,10 +34,13 @@ rowcol_arr = rowcol_str.split(",")
 row_num = int(rowcol_arr[0])
 col_num = int(rowcol_arr[1])
 
+row_num = 5
+col_num = 5
 # generate char_map of locations
 char_map = generateCharMap(row_num, col_num)
 # show map on screen
-displayMap(char_map, row_num, col_num, index_list)
+fig = displayMap(char_map, row_num, col_num, index_list)
+plt.show(block=False)
 
 print("")
 print("Please select your role")
@@ -43,15 +58,21 @@ while True:
 # Now the program has all the information it needs for checking further inputs
 initializeInputUtil(PLAYER, char_map, row_num, col_num, plot.width, plot.height)
 
+# Click to indicate start point
 print("")
-START_COORD = inputCoordinate("Enter the coordinate of the starting point by using the gradations at the sides of the graph")
-print("Your start coordinate is {}".format(START_COORD))
-start = coordinateToIndex(START_COORD)
+print("Please press inside a block to indicate where to start")
+cid = fig.canvas.mpl_connect('button_press_event', onclick)
+plt.waitforbuttonpress()
+print("Your start coordinate is {}".format(clickedCoordinate))
+start = coordinateToIndex(clickedCoordinate)
 print("Starting point's map index is {}".format(start))
 
+# Click to indicate end point
 while True:
     print("")
-    END_COORD = inputCoordinate("Enter the coordinate of the ending point by using the gradations at the sides of the graph")
+    print("Please press inside a block to indicate where you want to go")
+    plt.waitforbuttonpress()
+    END_COORD = clickedCoordinate
     if checkDestination(END_COORD):
         print("Correct Destination, program running...")
         break
@@ -59,9 +80,12 @@ while True:
         print("Your destination doesn't match your role, please try again")
         continue
 
+time.sleep(1)
 
 initializeMap(PLAYER, char_map, row_num, col_num, start, index_list)
 run(start)
 
 # display map to screen, with the calculated path marked
 displayMap(char_map, row_num, col_num, index_list)
+plt.show()
+

@@ -37,8 +37,7 @@ def displayMap(char_map, row_num, col_num, index_list):
                 row.append(color_vals[3][1])
         color_map.append(row)
     color_map = np.array(color_map)
-
-    plt.figure(figsize=(10, 5))
+    fig = plt.figure(figsize=(10, 5))
     plt.subplots_adjust(left=0.1, right=0.8, top=0.9, bottom=0.1)
     im = plt.imshow(color_map, extent=[0, col_num * width, 0, row_num * height], cmap=cm.tab20c, aspect='auto',
                     interpolation='none')
@@ -81,4 +80,4 @@ def displayMap(char_map, row_num, col_num, index_list):
         vertical = [indexToCoord(index_list[i], row_num)[1],
                     indexToCoord(index_list[i+1], row_num)[1]]
         plt.plot(horizontal, vertical, 'r', marker='o', linewidth=7)
-    plt.show()
+    return fig
