@@ -27,26 +27,24 @@ char_map = []
 start = ()  # start point
 index_list = []  # Calculated Path, a list of indexes on 2d array of pointArr
 
+# Input for number of rows and columns
 print("**************************************************************************")
 print("Please indicate the number of rows and columns, divided by comma, e.g. 3,5")
 rowcol_str = input(">>>")
 rowcol_arr = rowcol_str.split(",")
 row_num = int(rowcol_arr[0])
 col_num = int(rowcol_arr[1])
-
-row_num = 5
-col_num = 5
 # generate char_map of locations
 char_map = generateCharMap(row_num, col_num)
 # show map on screen
 fig = displayMap(char_map, row_num, col_num, index_list)
 plt.show(block=False)
 
+# Input for role selection
 print("")
 print("Please select your role")
 print("Covid Patient - C")
 print("Vaccine Receiver - V")
-
 while True:
     PLAYER = input(">>>")
     if PLAYER.lower() == 'c' or PLAYER.lower() == 'v':
