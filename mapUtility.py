@@ -61,6 +61,7 @@ def generateCharMap(rownum, colnum):
     #             ['n', 'n', 'q', 'p', 'v', 'v', 'p', 'q']]
     return char_map
 
+
 ##################################################################################################################
 # PEEKING FUNCTIONS
 # checks if the index is in bounds of an array

@@ -6,10 +6,10 @@ from mapUtility import *
 ##################################################################################################################
 
 # Global Variable of player
-PLAYER = "C"
+PLAYER = ""
 # Number of rows and columns TODO: Change to USER INPUT
-row_num = 8
-col_num = 8
+row_num = 0
+col_num = 0
 # Map representing different areas
 char_map = []
 start = ()  # start point TODO:user input
@@ -26,7 +26,6 @@ col_num = int(rowcol_arr[1])
 char_map = generateCharMap(row_num, col_num)
 # show map on screen
 displayMap(char_map, row_num, col_num, index_list)
-initializeInputUtil(PLAYER, char_map, row_num, col_num, plot.width, plot.height)
 
 print("")
 print("Please select your role")
@@ -40,6 +39,9 @@ while True:
     else:
         print("Wrong Input, please try again")
         continue
+
+# Now the program has all the information it needs for checking further inputs
+initializeInputUtil(PLAYER, char_map, row_num, col_num, plot.width, plot.height)
 
 print("")
 START_COORD = inputCoordinate("Enter the coordinate of the starting point")
@@ -61,5 +63,5 @@ while True:
 initializeMap(PLAYER, char_map, row_num, col_num, start, index_list)
 run(start)
 
-# display map to screen
+# display map to screen, with the calculated path marked
 displayMap(char_map, row_num, col_num, index_list)
