@@ -23,8 +23,7 @@ If you are playing as a covid patient ('c'), a valid location is a quarantine pl
 If you are playing as a vaccination patient ('v'), a valid location is a vaccination center.
 You cannot play as the role P.
 
-Based on user input, a random map is generated and you will be asked to enter a start and valid destination location depending on your player type.
-TODO: instructions on coordinate selection!
+Based on user input, a random map is generated and you will be asked to select (click) a start and valid destination location depending on your player type.
 
 ######################################################
 SEARCH ALGORITHM
