@@ -1,3 +1,9 @@
+# -------------------------------------------------------
+# Assignment 1
+# Written by Julie Pierrisnard 40077165, Ningyuan Sun 40124859
+# For COMP 472 – Summer 2021
+# --------------------------------------------------------
+
 import math
 
 PLAYER = ""
