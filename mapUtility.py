@@ -40,24 +40,16 @@ def generateCharMap(rownum, colnum):
     for i in range(rownum):
         row = []
         for j in range(colnum):
-            rd = random.randint(1, 4)
+            rd = random.randint(1, 12)
             if rd == 1:
-                row.append("p")
-            elif rd == 2:
                 row.append("q")
-            elif rd == 3:
+            elif rd == 2:
                 row.append("v")
+            elif 3 <= rd <= 7:
+                row.append("p")
             else:
                 row.append("n")
         char_map.append(row)
-    # char_map = [['n', 'n', 'v', 'n', 'n', 'p', 'n', 'p'],
-    #             ['n', 'p', 'v', 'p', 'v', 'p', 'n', 'p'],
-    #             ['p', 'p', 'n', 'p', 'v', 'p', 'v', 'v'],
-    #             ['p', 'v', 'q', 'p', 'p', 'n', 'n', 'p'],
-    #             ['p', 'p', 'v', 'q', 'v', 'q', 'q', 'p'],
-    #             ['q', 'q', 'q', 'v', 'p', 'q', 'p', 'q'],
-    #             ['v', 'q', 'n', 'v', 'p', 'q', 'p', 'n'],
-    #             ['n', 'n', 'q', 'p', 'v', 'v', 'p', 'q']]
     return char_map
 
 
@@ -387,9 +379,12 @@ def constructPathIndexList(end):
 
 
 def printPathInfo(end):
-    print("Path Taken:", end=" ")
-    print(*index_list, sep=" -> ")
-    print("Total Cost: {}".format(visitedPoints[end][1]))
+    if len(index_list) > 1:
+        print("Path Taken:", end=" ")
+        print(*index_list, sep=" -> ")
+        print("Total Cost: {}".format(visitedPoints[end][1]))
+    else:
+        print("No Path Found")
 
 
 # runs the algorithm
